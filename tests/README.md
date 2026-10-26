@@ -9,4 +9,6 @@ node tests/behaviour.js http://localhost:4182       # focus order, anchors, bfca
 node tests/layout-audit.js dist /tmp/shots          # overflow, tiny text/tap targets, console/CSP errors at 14 widths
 ```
 
-`sticky-menu.js` guards a real regression: `overflow-x: clip` on `html`/`body` combined with an `overflow: hidden` scroll lock detached the sticky header and made the menu open at the top of the page. Do not add overflow rules to `html`/`body` or lock body scroll for the menu.
+`sticky-menu.js` guards a real regression: `overflow-x: clip` on `html`/`body` combined with an `overflow: hidden` scroll lock detached the sticky header and made the menu open at the top of the page. Do not add overflow rules to `html`/`body` or lock body scroll for the menu. The mobile menu is `position: fixed` under the 77px header so it is always placed against the viewport.
+
+Stale assets can mimic this bug: before content-hashed URLs, phones kept a cached `style.css`/`site.js` for up to an hour after a deploy.

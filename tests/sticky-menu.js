@@ -29,6 +29,9 @@ async function rawTap(p,sel){const bb=await p.$eval(sel,e=>{const r=e.getBoundin
     if(Math.abs(r.navTop-r.hdrBottom)>1) fails.push(`${w}x${h} ${u} y=${y}: menu not attached under header (nav ${r.navTop} vs header ${r.hdrBottom})`);
     if(!r.hit) fails.push(`${w}x${h} ${u} y=${y}: menu not hit-testable at its top`);
     if(r.navBottom>r.vh+1 && !r.navScrollable) fails.push(`${w}x${h} ${u} y=${y}: menu taller than viewport and not scrollable (${r.navBottom}>${r.vh})`);
+    await p.evaluate(()=>scrollBy(0,Math.min(400,document.documentElement.scrollHeight-innerHeight-scrollY))); await p.waitForTimeout(80);
+    const r2=await p.evaluate(()=>{const n=document.querySelector('#navigation').getBoundingClientRect(),h=document.querySelector('.header').getBoundingClientRect();return{h:Math.round(h.top),hb:Math.round(h.bottom),nt:Math.round(n.top),vis:n.top>=0&&n.top<innerHeight}});
+    checks++; if(r2.h!==0||Math.abs(r2.nt-r2.hb)>1||!r2.vis) fails.push(`${w}x${h} ${u} y=${y}: menu detached after scrolling while open (header ${r2.h}, nav ${r2.nt} vs ${r2.hb})`);
     await rawTap(p,'.menu-toggle'); await p.waitForTimeout(80);
     const closed=await p.$eval('#navigation',n=>!n.classList.contains('open')); checks++; if(!closed) fails.push(`${w}x${h} ${u}: menu did not close on second tap`);
    }
@@ -36,5 +39,12 @@ async function rawTap(p,sel){const bb=await p.$eval(sel,e=>{const r=e.getBoundin
   }
   await ctx.close();
  }
+
+ for(const [w,h] of [[641,900],[700,900],[768,1024],[820,1180],[900,800],[1024,768],[1280,800],[1440,900],[1920,1080]]){
+  const ctx=await b.newContext({viewport:{width:w,height:h}}); const p=await ctx.newPage();
+  for(const u of ['/','/events/','/contact/']){ await p.goto(BASE+u,{waitUntil:'networkidle'}); await p.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';scrollTo(0,document.documentElement.scrollHeight*0.5)}); await p.waitForTimeout(60);
+   const r=await p.evaluate(()=>{const hd=document.querySelector('.header').getBoundingClientRect();const links=[...document.querySelectorAll('#navigation a')].map(a=>a.getBoundingClientRect());return{top:Math.round(hd.top),toggle:getComputedStyle(document.querySelector('.menu-toggle')).display,all:links.every(l=>l.width>0&&l.top>=hd.top&&l.bottom<=hd.bottom+1&&l.right<=innerWidth)}});
+   checks++; if(r.top!==0||r.toggle!=='none'||!r.all) fails.push(`${w}x${h} ${u}: inline nav problem ${JSON.stringify(r)}`);}
+  await ctx.close();}
  await b.close(); console.log('checks',checks,'fails',fails.length); console.log([...new Set(fails)].slice(0,25).join('\n'));
 })();
