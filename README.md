@@ -14,8 +14,19 @@ There is no enquiry form. Every call to action leads to `/contact/` (or the floa
 2. Deploy. `404.html` is served automatically for unknown paths.
 3. After attaching your domain, regenerate canonical URLs and the sitemap with `SITE_URL=https://your-domain python3 build.py` and commit `dist/`. The default is `https://www.bgeventmanagement.in`.
 
+## Compliance pages
+`/privacy/` (DPDP-aware notice), `/terms/`, `/accessibility/` and `/.well-known/security.txt`, all linked from the footer. See `LAUNCH_CHECKLIST.md` for what the owner must confirm before launch.
+
+## Performance
+Responsive WebP variants in `dist/assets/img/` (480/800/1200/native widths) with per-image `sizes`, first above-the-fold images eager, three preloaded self-hosted fonts, long-lived caching for fonts/images, no third-party requests. Lighthouse (mobile, simulated slow 4G): Accessibility 100, Best Practices 100, SEO 92 (see note), Performance 90–100, CLS 0.
+
+> The remaining SEO points come from Lighthouse's robots.txt check, which cannot fetch `robots.txt` under the strict `connect-src 'none'` CSP (a false positive; the file is valid) and from canonical URLs pointing at the production domain when tested on localhost.
+
+## Third-party assets
+Fonts Cormorant Garamond and Manrope are SIL Open Font License 1.1, self-hosted in `dist/assets/fonts/`. Photographs and reviews: see `SOURCES.md`.
+
 ## Security
 
-No third-party scripts, trackers or remote requests. A per-page `<meta>` Content-Security-Policy restricts scripts, styles, images and fonts to the site (the JSON-LD block is SHA-256 allow-listed by `build.py`). External links use `noopener noreferrer`.
+No third-party scripts, trackers or remote requests. A Content-Security-Policy (sent as a response header by `vercel.json`, with `frame-ancestors 'none'`, and mirrored per page in a `<meta>` tag) restricts scripts, styles, images and fonts to the site (the JSON-LD block is SHA-256 allow-listed; `build.py` keeps the header hash in sync). Also HSTS, `X-Content-Type-Options`, `X-Frame-Options`, COOP, Referrer-Policy and Permissions-Policy. External links use `noopener noreferrer`.
 
 Sources and design notes: `SOURCES.md`, `DESIGN.md`.
