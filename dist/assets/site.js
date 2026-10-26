@@ -8,7 +8,6 @@
     menu.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
     nav.classList.toggle('open', open);
-    document.body.classList.toggle('menu-open', open);
   }
 
   if (menu && nav) {
@@ -27,7 +26,8 @@
     document.addEventListener('click', function (e) {
       if (nav.classList.contains('open') && !e.target.closest('.header')) setMenu(false);
     });
-    window.matchMedia('(max-width:900px)').addEventListener('change', function (e) {
+    window.addEventListener('pageshow', function () { setMenu(false); });
+    window.matchMedia('(max-width:640px)').addEventListener('change', function (e) {
       if (!e.matches) setMenu(false);
     });
   }
