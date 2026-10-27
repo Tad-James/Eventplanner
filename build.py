@@ -73,7 +73,7 @@ def page(path,title,body,desc='',active='',closing=True,noindex=False):
  og=ORIGIN+'/assets/img/lsg10rqvt2qktddcjxqo-1116.webp'
  robots='noindex,follow' if noindex else 'index,follow,max-image-preview:large'
  canon='' if noindex else f'<link rel="canonical" href="{url}">'
- head=(f'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#7a1712">'
+ head=(f'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#7a1712"><meta name="color-scheme" content="only light"><meta name="supported-color-schemes" content="light"><meta name="darkreader-lock">'
   f'<meta http-equiv="Content-Security-Policy" content="{CSP}"><title>{escape(full)}</title><meta name="description" content="{escape(desc)}"><meta name="robots" content="{robots}">{canon}'
   f'<meta property="og:site_name" content="BG. Event Management"><meta property="og:locale" content="en_IN"><meta property="og:title" content="{escape(full)}"><meta property="og:description" content="{escape(desc)}"><meta property="og:type" content="website"><meta property="og:url" content="{url}">'
   f'<meta property="og:image" content="{og}"><meta property="og:image:width" content="1116"><meta property="og:image:height" content="644"><meta property="og:image:alt" content="Gold traditional stage with elaborate floral décor from the BG. Event Management portfolio">'

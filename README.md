@@ -25,6 +25,9 @@ Responsive WebP variants in `dist/assets/img/` (480/800/1200/native widths) with
 ## Third-party assets
 Fonts Cormorant Garamond and Manrope are SIL Open Font License 1.1, self-hosted in `dist/assets/fonts/`. Photographs and reviews: see `SOURCES.md`.
 
+## Colours stay as designed
+The site is light-only on purpose. `<meta name="color-scheme" content="only light">` and `:root{color-scheme:only light}` stop Chromium-based browsers' Auto Dark Mode ("force dark") from repainting pages when the device is in dark mode; `darkreader-lock` asks the Dark Reader extension to leave it alone. Verified pixel-identical with `tests/force-dark.js`.
+
 ## Security
 
 No third-party scripts, trackers or remote requests. A Content-Security-Policy (sent as a response header by `vercel.json`, with `frame-ancestors 'none'`, and mirrored per page in a `<meta>` tag) restricts scripts, styles, images and fonts to the site (the JSON-LD block is SHA-256 allow-listed; `build.py` keeps the header hash in sync). Also HSTS, `X-Content-Type-Options`, `X-Frame-Options`, COOP, Referrer-Policy and Permissions-Policy. External links use `noopener noreferrer`.
